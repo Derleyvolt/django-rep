@@ -1,12 +1,15 @@
-from django.shortcuts import render
-from rest_framework.viewsets import ViewSet
-from .models import PlanilhaModel
-from .serializers.PlanilhaSerializer import PlanilhaSerializer
-from rest_framework.response import Response
+from django.shortcuts                 import render
+from rest_framework.viewsets          import ViewSet
+from .models                          import PlanilhaModel
+from .serializers.PlanilhaSerializer  import PlanilhaSerializer
+from rest_framework.response          import Response
+from rest_framework.permissions       import IsAuthenticated
 
 # Create your views here.
 
 class PlanilhaView(ViewSet):
+    permission_classes = (IsAuthenticated,)
+    
     def listar(self, request):
         queryset = PlanilhaModel.objects.all()
         serializer = PlanilhaSerializer(queryset, many=True)
