@@ -12,6 +12,7 @@ class PlanilhaView(ViewSet):
         serializer = PlanilhaSerializer(queryset, many=True)
         return Response(serializer.data)
 
+    # RATO
     def atualizar(self, request):
         for i in request.data:
             serializer = PlanilhaSerializer(data=i)
