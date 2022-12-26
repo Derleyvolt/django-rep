@@ -1,27 +1,58 @@
 from rest_framework.viewsets          import ViewSet
+from rest_framework.viewsets          import ModelViewSet
 from rest_framework.response          import Response
-from .models                          import CustomUserModel
-from .serializers.serializer          import AccountSerializer
+from .models                          import CustomUser
+from .serializers.serializer          import UserSerializer
+from rest_framework_simplejwt.tokens  import RefreshToken
+from django.contrib.auth.hashers      import make_password
+from django.contrib.auth.hashers      import check_password
 
 # Create your views here.
 
 class UserAccountView(ViewSet):
 
+    def teste(self, request):
+        class UserCustom:
+            id = 1
+            username = "derley"
+
+        user = UserCustom
+
+        refresh = RefreshToken.for_user(user)
+
+        print({
+        'refresh': str(refresh),
+        'access': str(refresh.access_token),
+        })
+
+        return Response(status=200)
+
+        # return {
+        #     'refresh': str(refresh),
+        #     'access': str(refresh.access_token),
+        # }
+
     def cadastrar(self, request):
-        user = AccountSerializer(data=request.data)
+        user = UserSerializer(data=request.data)
 
         if user.is_valid():
-            user.save()
+            CustomUser.objects.create_user(request.data['username'], request.data['password'])
             return Response(user.data, status=200)
         
-        return Response(status=400)
+        return Response(status=410)
 
     def connect(self, request):
-        query = CustomUserModel.objects.filter(username = request.data['username'])
+        username = request.data['username']
+        password = request.data['password']
+
+        query = CustomUser.objects.get(username = username)
+
+        print(query.password)
 
         if query:
-            return Response(status=200)
-        return Response(status=400)
+            if check_password(password, query.password):
+                return Response({'sucess' : True}, status=200)
+        return Response({'sucess' : False}, status=400)
 
 # class UserAccountView(ViewSet):
 #     def cadastrar(self, request):

@@ -1,49 +1,52 @@
 from django.db import models
-from django.contrib.auth.models import BaseUserManager, AbstractUser
+from django.contrib.auth.models import BaseUserManager, AbstractUser, AbstractBaseUser
 from django.utils.translation   import gettext as _
 from django.core.exceptions import ValidationError
+from .teste import UserManager
 
-#from .teste import CustomUserManager
+class CustomUser(AbstractBaseUser):
+    username = models.CharField(
+        verbose_name='username',
+        max_length=255,
+        unique=True,
+    )
 
-# Create your models here.
+    is_active = models.BooleanField(default=True)   
+    staff     = models.BooleanField(default=False) # a admin user; non super-user
+    admin     = models.BooleanField(default=False) # a superuser
 
-# class CustomUser(AbstractUser):
-#     email = models.EmailField(_('email address'), unique=True)
+    objects = UserManager()
 
-#     USERNAME_FIELD  = 'email'
-#     REQUIRED_FIELDS = []
+    # notice the absence of a "Password field", that is built in.
 
-#     objects = CustomUserManager()
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = [] # Username & Password are required by default.
 
-#     def __str__(self):
-#         return self.email
+    def get_full_name(self):
+        return self.username
 
-def username_validator(username):
-    if len(username) < 8:
-        raise ValidationError(
-            _('%(username)s is smaller than 8 characters'),
-            params={'username': username},
-        )
+    def get_short_name(self):
+        return self.username
 
-def password_validator(password):
-    if len(password) < 5:
-        raise ValidationError(
-            _('%(password)s is smaller than 8 characters'),
-            params={'password': password},
-        )
+    def __str__(self):
+        return self.username
 
-class CustomUserModel(models.Model):
-    username  = models.CharField(max_length=100, validators=[username_validator], unique=True)
-    password  = models.CharField(max_length=100, validators=[password_validator])
-    name      = models.CharField(max_length=100)
+    def has_perm(self, perm, obj=None):
+        "Does the user have a specific permission?"
+        # Simplest possible answer: Yes, always
+        return True
 
-# class CustomUserManager(BaseUserManager):
-    
-#     def create_user(self, email, password, **extra_fields):
-#         if not email:
-#             raise ValueError(_('Users must have an email address'))
-#         email = self.normalize_email(email)
-#         user = self.model(email=email, **extra_fields)
-#         user.set_password(password)
-#         user.save()
-#         return user
+    def has_module_perms(self, app_label):
+        "Does the user have permissions to view the app `app_label`?"
+        # Simplest possible answer: Yes, always
+        return True
+
+    @property
+    def is_staff(self):
+        "Is the user a member of staff?"
+        return self.staff
+
+    @property
+    def is_admin(self):
+        "Is the user a admin member?"
+        return self.admin
