@@ -10,28 +10,6 @@ from django.contrib.auth.hashers      import check_password
 # Create your views here.
 
 class UserAccountView(ViewSet):
-
-    def teste(self, request):
-        class UserCustom:
-            id = 1
-            username = "derley"
-
-        user = UserCustom
-
-        refresh = RefreshToken.for_user(user)
-
-        print({
-        'refresh': str(refresh),
-        'access': str(refresh.access_token),
-        })
-
-        return Response(status=200)
-
-        # return {
-        #     'refresh': str(refresh),
-        #     'access': str(refresh.access_token),
-        # }
-
     def cadastrar(self, request):
         user = UserSerializer(data=request.data)
 
@@ -47,34 +25,7 @@ class UserAccountView(ViewSet):
 
         query = CustomUser.objects.get(username = username)
 
-        print(query.password)
-
         if query:
             if check_password(password, query.password):
                 return Response({'sucess' : True}, status=200)
         return Response({'sucess' : False}, status=400)
-
-# class UserAccountView(ViewSet):
-#     def cadastrar(self, request):
-#         password = request.data['password']
-#         email    = request.data['email']
-
-#         CustomUser.objects.create_user(email=email, password=password)
-        
-#         return Response(status=200)
-
-        # if user:
-        #     user.password = make_password(password)
-        #     user.save(using=self._db)
-
-
-        # for i in request.data:
-        #     serializer = PlanilhaSerializer(data=i)
-        #     if not serializer.is_valid():
-        #         return Response(serializer.data, status=400)
-
-        # for i in request.data:
-        #     serializer = PlanilhaSerializer(data=i)
-        #     if serializer.is_valid():
-        #         serializer.save()
-
