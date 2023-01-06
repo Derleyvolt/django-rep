@@ -19,13 +19,15 @@ class UserAccountView(ViewSet):
         
         return Response(status=410)
 
-    def connect(self, request):
+    def obter_id(self, request):
         username = request.data['username']
         password = request.data['password']
 
-        query = CustomUser.objects.get(username = username)
+        try:
+            query = CustomUser.objects.get(username = username)
+        except:
+            return Response("Failure", status=400)
 
-        if query:
-            if check_password(password, query.password):
-                return Response({'sucess' : True}, status=200)
-        return Response({'sucess' : False}, status=400)
+        if check_password(password, query.password):
+            return Response({'id' : query.id}, status=200)
+        return Response("Failure", status=400)
