@@ -11,7 +11,7 @@ from rest_framework.permissions  import IsAuthenticated
 # Create your views here.
 
 class ProjetoView(ViewSet):
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     @action(methods=['POST'], detail=False, url_path='criar_favorecido')
     def criar_favorecido(self, request):
@@ -22,7 +22,7 @@ class ProjetoView(ViewSet):
         return Response("Failure", status=400)
 
     @action(methods=['POST'], detail=False, url_path='criar_projeto')
-    def criar_projeto(self, request):
+    def criar(self, request):
         serializer = ProjetoSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -30,7 +30,7 @@ class ProjetoView(ViewSet):
         return Response("Failure", status=400)
 
     @action(methods=['GET'], detail=True, url_path='obter_projeto')
-    def obter_projeto(self, request, pk=None):
+    def obter(self, request, pk=None):
         try:
             instance = ProjetoModel.objects.get(id=pk)
         except:
@@ -39,8 +39,8 @@ class ProjetoView(ViewSet):
         serializer = ProjetoSerializer(data=instance)
         return Response(serializer.data, status=200)
 
-    @action(methods=['GET'], detail=False)
-    def get_all(self, request):
+    @action(methods=['GET'], detail=False, url_path='obter_tudo')
+    def obter_tudo(self, request):
         result      = []
         queryset    = ProjetoModel.objects.all()
         serializer  = ProjetoSerializer(queryset, many=True)
@@ -66,8 +66,8 @@ class ProjetoView(ViewSet):
 
         return Response(result, status=200)
 
-    @action(methods=['GET'], detail=False)
-    def get_all_minimal(self, request):
+    @action(methods=['GET'], detail=False, url_path='obter_tudo_minimal')
+    def obter_tudo_minimal(self, request):
         result      = []
         queryset    = ProjetoModel.objects.all()
         serializer  = ProjetoSerializer(queryset, many=True)
