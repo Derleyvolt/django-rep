@@ -11,7 +11,7 @@ from rest_framework.permissions  import IsAuthenticated
 # Create your views here.
 
 class ProjetoView(ViewSet):
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     @action(methods=['POST'], detail=False, url_path='criar_favorecido')
     def criar_favorecido(self, request):
@@ -23,7 +23,7 @@ class ProjetoView(ViewSet):
     
     @action(methods=['GET'], detail=False, url_path='obter_tudo_favorecido')
     def obter_tudo_favorecido(self, request):
-        queryset   = FavorecidosModel.objets.all()
+        queryset   = FavorecidosModel.objects.all()
         serializer = FavorecidoSerializer(queryset, many=True)
         return Response(serializer.data, status=200)
     
