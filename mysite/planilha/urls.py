@@ -4,7 +4,6 @@ from rest_framework.authtoken.views import obtain_auth_token
 from .views import PlanilhaViewset
 from rest_framework import routers
 
-
 router = routers.SimpleRouter()
 router.register(r'planilha', PlanilhaViewset)
 

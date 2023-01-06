@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'planilha.apps.PlanilhaConfig',
     'account.apps.AccountConfig',
+    'app.apps.AppConfig',
 ]
 
 MIDDLEWARE = [
