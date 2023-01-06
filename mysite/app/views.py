@@ -20,6 +20,22 @@ class ProjetoView(ViewSet):
             serializer.save()
             return Response("Success", status=200)
         return Response("Failure", status=400)
+    
+    @action(methods=['GET'], detail=False, url_path='obter_tudo_favorecido')
+    def obter_tudo_favorecido(self, request):
+        queryset   = FavorecidosModel.objets.all()
+        serializer = FavorecidoSerializer(queryset, many=True)
+        return Response(serializer.data, status=200)
+    
+    @action(methods=['GET'], detail=True, url_path='obter_favorecido')
+    def obter_favorecido(self, request, pk=None):
+        try:
+            instance   = FavorecidosModel.objets.get(id=pk)
+        except:
+            return Response("Failure", status=400)
+        
+        serializer = FavorecidoSerializer(instance)
+        return Response(serializer.data, status=200)
 
     @action(methods=['POST'], detail=False, url_path='criar_projeto')
     def criar(self, request):
