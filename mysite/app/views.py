@@ -1,15 +1,17 @@
-from django.shortcuts           import render
-from rest_framework.viewsets    import ModelViewSet
-from rest_framework.viewsets    import ViewSet
-from rest_framework.views       import APIView
+from django.shortcuts            import render
+from rest_framework.viewsets     import ModelViewSet
+from rest_framework.viewsets     import ViewSet
+from rest_framework.views        import APIView
 from .models                     import ProjetoModel, FavorecidosModel
 from .serializers.serializer     import ProjetoSerializer, FavorecidoSerializer
-from rest_framework.response    import Response
-from rest_framework.decorators  import action
+from rest_framework.response     import Response
+from rest_framework.decorators   import action
+from rest_framework.permissions  import IsAuthenticated
 
 # Create your views here.
 
 class ProjetoView(ViewSet):
+    permission_classes = [IsAuthenticated]
 
     @action(methods=['POST'], detail=False, url_path='criar_favorecido')
     def criar_favorecido(self, request):
