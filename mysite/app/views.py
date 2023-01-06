@@ -29,6 +29,16 @@ class ProjetoView(ViewSet):
             return Response("Success", status=200)
         return Response("Failure", status=400)
 
+    @action(methods=['GET'], detail=True, url_path='obter_projeto')
+    def obter_projeto(self, request, pk=None):
+        try:
+            instance = ProjetoModel.objects.get(id=pk)
+        except:
+            return Response("Failure", status=400)
+
+        serializer = ProjetoSerializer(data=instance)
+        return Response(serializer.data, status=200)
+
     @action(methods=['GET'], detail=False)
     def get_all(self, request):
         result      = []
@@ -53,5 +63,16 @@ class ProjetoView(ViewSet):
                 result[-1].pop('id_proponente')
             except:
                 return Response("O id do coordenador ou proponente nao foi/foram encontrado(s)", status=400)
+
+        return Response(result, status=200)
+
+    @action(methods=['GET'], detail=False)
+    def get_all_minimal(self, request):
+        result      = []
+        queryset    = ProjetoModel.objects.all()
+        serializer  = ProjetoSerializer(queryset, many=True)
+
+        for u in serializer.data:
+            result.append({ "id" : u.id, "titulo": u.titulo })
 
         return Response(result, status=200)
