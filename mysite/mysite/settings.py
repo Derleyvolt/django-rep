@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'planilha.apps.PlanilhaConfig',
-    'account.apps.AccountConfig',
     'app.apps.AppConfig',
 ]
 
@@ -133,4 +132,4 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL    = 'account.CustomUser'
+AUTH_USER_MODEL    = 'app.CustomUser'
