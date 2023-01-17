@@ -79,7 +79,7 @@ class ExtratoModel(models.Model):
     # id_lancamento         = models.AutoField(primary_key=True)
     id_projeto            = models.ForeignKey(ProjetoModel, on_delete=models.CASCADE, related_name='id_projeto', db_column='id_projeto')
     id_movimentacao       = models.ForeignKey(TipoMovimentacaoModel, on_delete=models.CASCADE, related_name='id_movimentacao', db_column='id_movimentacao')
-    data                  = models.DateField(auto_now=True)
+    data                  = models.DateField()
     id_rubrica            = models.ForeignKey(RubricaModel, on_delete=models.CASCADE, related_name='id_rubrica', db_column='id_rubrica')
     id_favorecido         = models.ForeignKey(FavorecidosModel, on_delete=models.CASCADE, related_name = 'id_favorecido', db_column='id_favorecido')
     valor                 = models.FloatField()
