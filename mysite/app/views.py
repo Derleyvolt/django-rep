@@ -150,7 +150,7 @@ class RubricaView(ViewSet):
 
         new_rubrica_id = increment_rubrica_id(queryset.id)
 
-        serializer = RubricaSerializer(data=obj)
+        serializer = RubricaSerializer(data={ "id" : new_rubrica_id, "descricao" : request.data['descricao'] })
 
         if serializer.is_valid():
             serializer.save()
