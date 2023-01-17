@@ -34,4 +34,4 @@ class TagSerializer(serializers.ModelSerializer):
 class ExtratoSerializer(serializers.ModelSerializer):
     class Meta:
         model   = ExtratoModel
-        exclude  = ['data']
+        fields  = '__all__'
