@@ -158,6 +158,12 @@ class RubricaView(ViewSet):
 
         return Response(status=400)
 
+    @action(methods=['GET'], detail=False, url_path='listar_rubrica')
+    def listar(self, request):
+        queryset   = RubricaModel.objects.all()
+        serializer = RubricaSerializer(queryset, many=True)
+        return Response(serializer.data, status=200)
+
 class TagView(ViewSet):
     @action(methods=['POST'], detail=False, url_path='criar_tag')
     def criar(self, request):
@@ -167,6 +173,12 @@ class TagView(ViewSet):
             serializer.save()
             return Response(status=201)
         return Response(status=400)
+
+    @action(methods=['GET'], detail=False, url_path='listar_tag')
+    def listar(self, request):
+        queryset   = TagModel.objects.all()
+        serializer = TagSerializer(queryset, many=True)
+        return Response(serializer.data, status=200)
 
 
 class TipoMovimentacaoView(ViewSet):
@@ -178,6 +190,12 @@ class TipoMovimentacaoView(ViewSet):
             serializer.save()
             return Response(status=201)
         return Response(status=400)
+
+    @action(methods=['GET'], detail=False, url_path='listar_movimentacao')
+    def listar(self, request):
+        queryset   = TipoMovimentacaoModel.objects.all()
+        serializer = TipoMovimentacaoSerializer(queryset, many=True)
+        return Response(serializer.data, status=200)
 
 
 class ExtratoView(ViewSet):
