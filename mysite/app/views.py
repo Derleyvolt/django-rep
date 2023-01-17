@@ -180,7 +180,6 @@ class TagView(ViewSet):
         serializer = TagSerializer(queryset, many=True)
         return Response(serializer.data, status=200)
 
-
 class TipoMovimentacaoView(ViewSet):
     @action(methods=['POST'], detail=False, url_path='criar_movimentacao')
     def criar(self, request):
@@ -197,7 +196,6 @@ class TipoMovimentacaoView(ViewSet):
         serializer = TipoMovimentacaoSerializer(queryset, many=True)
         return Response(serializer.data, status=200)
 
-
 class ExtratoView(ViewSet):
     @action(methods=['POST'], detail=False, url_path='criar_extrato')
     def criar(self, request):
@@ -207,3 +205,13 @@ class ExtratoView(ViewSet):
             serializer.save()
             return Response(status=201)
         return Response(status=400)
+
+    @action(methods=['GET'], detail=True, url_path='obter_extratos')
+    def obter_extratos(self, request, pk=None):
+        try:
+            queryset = ExtratoModel.objects.filter(id_projeto=pk)
+        except ExtratoModel.DoesNotExist:
+            return Response(status=200)
+        
+        serializer = ExtratoSerializer(queryset, many=True)
+        return Response(serializer.data, status=200)
