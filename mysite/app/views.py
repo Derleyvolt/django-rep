@@ -122,7 +122,7 @@ def increment_rubrica_id(id, levels = 2):
     if id.replace('.', '') == '333':
         return id;
 
-    # 1.1.1 => permite 3^3-1 combinações
+    # 1.1.1 => permite 3^3-3^2 combinações
     id_ls = list(id.replace('.', ''))
 
     for i in range(2, 0, -1):
