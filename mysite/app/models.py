@@ -82,5 +82,6 @@ class ExtratoModel(models.Model):
     data                  = models.DateField(auto_now=True)
     id_rubrica            = models.ForeignKey(RubricaModel, on_delete=models.CASCADE, related_name='id_rubrica', db_column='id_rubrica')
     id_favorecido         = models.ForeignKey(FavorecidosModel, on_delete=models.CASCADE, related_name = 'id_favorecido', db_column='id_favorecido')
+    valor                 = models.FloatField()
     id_tag                = models.ForeignKey(TagModel, on_delete=models.CASCADE, related_name = 'id_tag', db_column='id_tag')
     observacao            = models.CharField(max_length=150)
