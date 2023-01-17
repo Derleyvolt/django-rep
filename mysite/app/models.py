@@ -64,3 +64,23 @@ class ProjetoModel(models.Model):
     id_coordenador    = models.ForeignKey(FavorecidosModel, on_delete=models.CASCADE, related_name = 'id_coordenador', db_column='id_coordenador')
     id_proponente     = models.ForeignKey(FavorecidosModel, on_delete=models.CASCADE, related_name = 'id_proponente',  db_column='id_proponente')
     id_usuario        = models.ForeignKey(CustomUser,       on_delete=models.CASCADE, related_name = 'id_usuario',     db_column='id_user')
+
+class RubricaModel(models.Model):
+    id         = models.CharField(primary_key=True, unique=True, max_length=100)
+    descricao  = models.CharField(max_length=200,   unique=True)
+
+class TipoMovimentacaoModel(models.Model):
+    descricao = models.CharField(max_length=150, unique=True)
+
+class TagModel(models.Model):
+    descricao = models.CharField(max_length=150, unique=True)
+
+class ExtratoModel(models.Model):
+    # id_lancamento         = models.AutoField(primary_key=True)
+    id_projeto            = models.ForeignKey(ProjetoModel, on_delete=models.CASCADE, related_name='id_projeto', db_column='id_projeto')
+    id_movimentacao       = models.ForeignKey(TipoMovimentacaoModel, on_delete=models.CASCADE, related_name='id_movimentacao', db_column='id_movimentacao')
+    data                  = models.DateField(auto_now=True)
+    id_rubrica            = models.ForeignKey(RubricaModel, on_delete=models.CASCADE, related_name='id_rubrica', db_column='id_rubrica')
+    id_favorecido         = models.ForeignKey(FavorecidosModel, on_delete=models.CASCADE, related_name = 'id_favorecido', db_column='id_favorecido')
+    id_tag                = models.ForeignKey(TagModel, on_delete=models.CASCADE, related_name = 'id_tag', db_column='id_tag')
+    observacao            = models.CharField(max_length=150)

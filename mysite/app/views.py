@@ -1,9 +1,10 @@
-from django.shortcuts            import render
+from django.shortcuts             import render
 from rest_framework.viewsets      import ModelViewSet
 from rest_framework.viewsets      import ViewSet
 from rest_framework.views         import APIView
-from .models                      import ProjetoModel, FavorecidosModel, CustomUser
-from .serializers.serializer      import ProjetoSerializer, FavorecidoSerializer, UserSerializer
+from .models                      import ProjetoModel, FavorecidosModel, CustomUser, TagModel, RubricaModel, TipoMovimentacaoModel, ExtratoModel
+from .serializers.serializer      import ProjetoSerializer, FavorecidoSerializer, UserSerializer, TagSerializer, RubricaSerializer, TipoMovimentacaoSerializer, ExtratoSerializer
+                                         
 from rest_framework.response      import Response
 from rest_framework.decorators    import action
 from rest_framework.permissions   import IsAuthenticated
@@ -33,7 +34,6 @@ class UserAccountView(ViewSet):
         if check_password(password, query.password):
             return Response({'id' : query.id}, status=200)
         return Response("Failure", status=400)
-
 
 class ProjetoView(ViewSet):
     # permission_classes = [IsAuthenticated]
@@ -117,3 +117,75 @@ class ProjetoView(ViewSet):
             result.append({ "id" : u['id'], "titulo": u['titulo'] })
 
         return Response(result, status=200)
+
+def increment_rubrica_id(id, levels = 2):
+    if id.replace('.', '') == '333':
+        return id;
+
+    # 1.1.1 => permite 3^3 combinações
+    id_ls = list(id.replace('.', ''))
+
+    for i in range(2, 0, -1):
+        if (ord(id_ls[i])-ord('0')) < levels:
+            id_ls[i] = chr(ord(id_ls[i]) + 1)
+            break
+        else:
+            id_ls[i] = '0'
+    
+    return ".".join(id_ls)
+
+class RubricaView(ViewSet):
+    @action(methods=['POST'], detail=False, url_path='criar_rubrica')
+    def criar(self, request):
+        try:
+            queryset = RubricaModel.objects.latest('id')
+        except RubricaModel.DoesNotExist:
+            obj = { "id" : "1.0.0", "descricao" : request.data['descricao'] }
+
+            serializer = RubricaSerializer(data=obj)
+
+            if serializer.is_valid():
+                serializer.save()
+                return Response(status=201)
+
+        new_rubrica_id = increment_rubrica_id(queryset.id)
+
+        serializer = RubricaSerializer(data=obj)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(new_rubrica_id, status=201)
+
+        return Response(status=400)
+
+class TagView(ViewSet):
+    @action(methods=['POST'], detail=False, url_path='criar_tag')
+    def criar(self, request):
+        serializer = TagSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=201)
+        return Response(status=400)
+
+
+class TipoMovimentacaoView(ViewSet):
+    @action(methods=['POST'], detail=False, url_path='criar_movimentacao')
+    def criar(self, request):
+        serializer = TipoMovimentacaoSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=201)
+        return Response(status=400)
+
+
+class ExtratoView(ViewSet):
+    @action(methods=['POST'], detail=False, url_path='criar_extrato')
+    def criar(self, request):
+        serializer = ExtratoSerializer(data=request.data)
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=201)
+        return Response(status=400)
