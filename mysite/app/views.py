@@ -215,3 +215,16 @@ class ExtratoView(ViewSet):
         
         serializer = ExtratoSerializer(queryset, many=True)
         return Response(serializer.data, status=200)
+
+    
+    @action(methods=['PUT'], detail=True, url_path='update_extrato')
+    def update_extrato(self, request, pk=None):
+        try:
+            obj = ExtratoModel.objects.get(pk=pk)
+            obj.__dict__.update(request.data)
+            obj.save()
+        except ExtratoModel.DoesNotExist:
+            return Response(status=200)
+
+        serializer = ExtratoSerializer(obj)
+        return Response(serializer.data, status=200)
