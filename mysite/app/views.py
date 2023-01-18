@@ -203,7 +203,7 @@ class ExtratoView(ViewSet):
         
         if serializer.is_valid():
             serializer.save()
-            return Response(status=201)
+            return Response(serializer.data, status=201)
         return Response(status=400)
 
     @action(methods=['GET'], detail=True, url_path='obter_extratos')
