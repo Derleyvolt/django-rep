@@ -135,28 +135,45 @@ def increment_rubrica_id(id, levels = 2):
     return ".".join(id_ls)
 
 class RubricaView(ViewSet):
+    # @action(methods=['POST'], detail=False, url_path='criar_rubrica')
+    # def criar(self, request):
+    #     try:
+    #         queryset = RubricaModel.objects.latest('id')
+    #     except RubricaModel.DoesNotExist:
+    #         obj = { "id" : "1.0.0", "descricao" : request.data['descricao'] }
+
+    #         serializer = RubricaSerializer(data=obj)
+
+    #         if serializer.is_valid():
+    #             serializer.save()
+    #             return Response(status=201)
+
+    #     new_rubrica_id = increment_rubrica_id(queryset.id)
+
+    #     serializer = RubricaSerializer(data={ "id" : new_rubrica_id, "descricao" : request.data['descricao'] })
+
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         return Response(new_rubrica_id, status=201)
+
+    #     return Response(status=400)
+
     @action(methods=['POST'], detail=False, url_path='criar_rubrica')
     def criar(self, request):
-        try:
-            queryset = RubricaModel.objects.latest('id')
-        except RubricaModel.DoesNotExist:
-            obj = { "id" : "1.0.0", "descricao" : request.data['descricao'] }
-
-            serializer = RubricaSerializer(data=obj)
-
-            if serializer.is_valid():
-                serializer.save()
-                return Response(status=201)
-
-        new_rubrica_id = increment_rubrica_id(queryset.id)
-
-        serializer = RubricaSerializer(data={ "id" : new_rubrica_id, "descricao" : request.data['descricao'] })
-
+        serializer = RubricaSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(new_rubrica_id, status=201)
-
+            return Response(status=201)
         return Response(status=400)
+
+    @action(methods=['GET'], detail=True, url_path='verificar_id_rubrica')
+    def verificar_id(self, request, pk=None):
+        data = '.'.join(str(pk))
+        try:
+            obj = RubricaModel.objects.get(id=data)
+        except:
+            return Response({ 'status' : True}, status=200)
+        return Response({ 'status' : False}, status=200)
 
     @action(methods=['GET'], detail=False, url_path='listar_rubrica')
     def listar(self, request):
