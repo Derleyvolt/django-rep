@@ -67,7 +67,7 @@ class ProjetoModel(models.Model):
 
 class RubricaModel(models.Model):
     id         = models.CharField(primary_key=True, unique=True, max_length=100)
-    descricao  = models.CharField(max_length=200,   unique=True)
+    descricao  = models.CharField(max_length=200)
 
 class TipoMovimentacaoModel(models.Model):
     descricao = models.CharField(max_length=150, unique=True)

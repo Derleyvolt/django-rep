@@ -160,10 +160,13 @@ class RubricaView(ViewSet):
 
     @action(methods=['POST'], detail=False, url_path='criar_rubrica')
     def criar(self, request):
-        serializer = RubricaSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(status=201)
+        try:
+            RubricaModel.objects.get(id=request.data['id'])
+        except:
+            serializer = RubricaSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(status=201)
         return Response(status=400)
 
     @action(methods=['GET'], detail=True, url_path='verificar_id_rubrica')
