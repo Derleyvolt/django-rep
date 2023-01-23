@@ -173,7 +173,7 @@ class RubricaView(ViewSet):
             obj = RubricaModel.objects.get(id=data)
         except:
             return Response({ 'status' : True}, status=200)
-        return Response({ 'status' : False}, status=200)
+        return Response({ 'status' : False}, status=400)
 
     @action(methods=['GET'], detail=False, url_path='listar_rubrica')
     def listar(self, request):
