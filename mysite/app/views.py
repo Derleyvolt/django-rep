@@ -138,29 +138,6 @@ def increment_rubrica_id(id, levels = 2):
     return ".".join(id_ls)
 
 class RubricaView(ViewSet):
-    # @action(methods=['POST'], detail=False, url_path='criar_rubrica')
-    # def criar(self, request):
-    #     try:
-    #         queryset = RubricaModel.objects.latest('id')
-    #     except RubricaModel.DoesNotExist:
-    #         obj = { "id" : "1.0.0", "descricao" : request.data['descricao'] }
-
-    #         serializer = RubricaSerializer(data=obj)
-
-    #         if serializer.is_valid():
-    #             serializer.save()
-    #             return Response(status=201)
-
-    #     new_rubrica_id = increment_rubrica_id(queryset.id)
-
-    #     serializer = RubricaSerializer(data={ "id" : new_rubrica_id, "descricao" : request.data['descricao'] })
-
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(new_rubrica_id, status=201)
-
-    #     return Response(status=400)
-
     permission_classes = [IsAuthenticated]
 
     @action(methods=['POST'], detail=False, url_path='criar_rubrica')
