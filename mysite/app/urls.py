@@ -11,7 +11,7 @@ router.register('', RubricaView,            basename='rubricaview')
 router.register('', TagView,                basename='tagview')
 router.register('', TipoMovimentacaoView,   basename='tipomovimentacaoview')
 router.register('', ExtratoView,            basename='extratoview')
-router.register('', FavorecidoView,       basename='favorecidoview')
+router.register('', FavorecidoView,         basename='favorecidoview')
 
 urlpatterns = [
     path('cadastrar/',      include(router.urls)),

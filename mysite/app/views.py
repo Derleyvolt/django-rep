@@ -36,7 +36,7 @@ class UserAccountView(ViewSet):
         return Response("Failure", status=400)
 
 class ProjetoView(ViewSet):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     @action(methods=['POST'], detail=False, url_path='criar_projeto')
     def criar(self, request):
@@ -95,6 +95,7 @@ class ProjetoView(ViewSet):
         return Response(result, status=200)
 
 class FavorecidoView(ViewSet):
+    permission_classes = [IsAuthenticated]
     @action(methods=['POST'], detail=False, url_path='criar_favorecido')
     def criar_favorecido(self, request):
         serializer = FavorecidoSerializer(data=request.data)
@@ -160,6 +161,8 @@ class RubricaView(ViewSet):
 
     #     return Response(status=400)
 
+    permission_classes = [IsAuthenticated]
+
     @action(methods=['POST'], detail=False, url_path='criar_rubrica')
     def criar(self, request):
         try:
@@ -187,6 +190,8 @@ class RubricaView(ViewSet):
         return Response(serializer.data, status=200)
 
 class TagView(ViewSet):
+    permission_classes = [IsAuthenticated]
+
     @action(methods=['POST'], detail=False, url_path='criar_tag')
     def criar(self, request):
         serializer = TagSerializer(data=request.data)
@@ -203,6 +208,8 @@ class TagView(ViewSet):
         return Response(serializer.data, status=200)
 
 class TipoMovimentacaoView(ViewSet):
+    permission_classes = [IsAuthenticated]
+
     @action(methods=['POST'], detail=False, url_path='criar_movimentacao')
     def criar(self, request):
         serializer = TipoMovimentacaoSerializer(data=request.data)
@@ -219,6 +226,8 @@ class TipoMovimentacaoView(ViewSet):
         return Response(serializer.data, status=200)
 
 class ExtratoView(ViewSet):
+    permission_classes = [IsAuthenticated]
+
     @action(methods=['POST'], detail=False, url_path='criar_extrato')
     def criar(self, request):
         serializer = ExtratoSerializer(data=request.data)
