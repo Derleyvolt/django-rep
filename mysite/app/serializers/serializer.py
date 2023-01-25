@@ -19,7 +19,7 @@ class UserSerializer(serializers.ModelSerializer):
 class TipoMovimentacaoSerializer(serializers.ModelSerializer):
     class Meta:
         model   = TipoMovimentacaoModel
-        fields  = '__all__'
+        fields  = ['descricao']
 
 class RubricaSerializer(serializers.ModelSerializer):
     class Meta:

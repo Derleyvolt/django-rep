@@ -66,7 +66,7 @@ class ProjetoModel(models.Model):
     id_usuario        = models.ForeignKey(CustomUser,       on_delete=models.CASCADE, related_name = 'id_usuario',     db_column='id_user')
 
 class RubricaModel(models.Model):
-    id         = models.CharField(primary_key=True, unique=True, max_length=100)
+    id         = models.CharField(primary_key=True, max_length=100, unique=True)
     descricao  = models.CharField(max_length=200, unique=True)
 
 class TipoMovimentacaoModel(models.Model):

@@ -137,7 +137,7 @@ def increment_rubrica_id(id, levels = 2):
     return ".".join(id_ls)
 
 class RubricaView(ViewSet):
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     @action(methods=['POST'], detail=False, url_path='criar_rubrica')
     def criar(self, request):
@@ -184,7 +184,7 @@ class TagView(ViewSet):
         return Response(serializer.data, status=200)
 
 class TipoMovimentacaoView(ViewSet):
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     @action(methods=['POST'], detail=False, url_path='criar_movimentacao')
     def criar(self, request):
@@ -213,7 +213,7 @@ class TipoMovimentacaoView(ViewSet):
         return Response(serializer.data, status=200)
 
 class ExtratoView(ViewSet):
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     @action(methods=['POST'], detail=False, url_path='criar_extrato')
     def criar(self, request):
