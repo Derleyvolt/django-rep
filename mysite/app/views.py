@@ -203,7 +203,7 @@ class TipoMovimentacaoView(ViewSet):
         return Response(serializer.data, status=200)
 
 class ExtratoView(ViewSet):
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
     @action(methods=['POST'], detail=False, url_path='criar_extrato')
     def criar(self, request):
@@ -230,6 +230,14 @@ class ExtratoView(ViewSet):
         try:
             obj = ExtratoModel.objects.get(pk=pk)
             obj.__dict__.update(request.data)
+
+            # ForeignKeys
+            obj.id_favorecido_id            = request.data['id_favorecido']
+            obj.id_rubrica_id               = request.data['id_rubrica']
+            obj.id_tag_id                   = request.data['id_tag']
+            obj.id_movimentacao_id          = request.data['id_movimentacao']
+            obj.id_projeto_id               = request.data['id_projeto']
+
             obj.save()
         except ExtratoModel.DoesNotExist:
             return Response(status=200)
