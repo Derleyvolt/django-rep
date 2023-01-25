@@ -113,7 +113,6 @@ class FavorecidoView(ViewSet):
     @action(methods=['GET'], detail=True, url_path='obter_favorecido')
     def obter_favorecido(self, request, pk=None):
         try:
-            print(pk)
             instance   = FavorecidosModel.objects.get(id=pk)
         except:
             return Response("Failure", status=400)
@@ -138,7 +137,7 @@ def increment_rubrica_id(id, levels = 2):
     return ".".join(id_ls)
 
 class RubricaView(ViewSet):
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
     @action(methods=['POST'], detail=False, url_path='criar_rubrica')
     def criar(self, request):
@@ -185,16 +184,27 @@ class TagView(ViewSet):
         return Response(serializer.data, status=200)
 
 class TipoMovimentacaoView(ViewSet):
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
     @action(methods=['POST'], detail=False, url_path='criar_movimentacao')
     def criar(self, request):
+        print(request.data)
         serializer = TipoMovimentacaoSerializer(data=request.data)
 
         if serializer.is_valid():
             serializer.save()
             return Response(status=201)
         return Response(status=400)
+
+    # @action(methods=['GET'], detail=True, url_path='obter_movimentacao')
+    # def obter_movimentacao(self, request, pk=None):
+    #     try:
+    #         instance   = TipoMovimentacaoModel.objects.get(descricao=pk)
+    #     except:
+    #         return Response("Failure", status=400)
+        
+    #     serializer = TipoMovimentacaoSerializer(instance)
+    #     return Response(serializer.data, status=200)
 
     @action(methods=['GET'], detail=False, url_path='listar_movimentacao')
     def listar(self, request):
