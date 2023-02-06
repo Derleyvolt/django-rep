@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import ProjetoModel, FavorecidosModel, CustomUser, RubricaModel, TagModel, TipoMovimentacaoModel, ExtratoModel
+from ..models import ProjetoModel, FavorecidosModel, CustomUser, RubricaModel, TagModel, TipoMovimentacaoModel, ExtratoModel, TagModelExtrato
 
 class ProjetoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -34,4 +34,9 @@ class TagSerializer(serializers.ModelSerializer):
 class ExtratoSerializer(serializers.ModelSerializer):
     class Meta:
         model   = ExtratoModel
+        fields  = '__all__'
+
+class TagExtratoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model   = TagModelExtrato
         fields  = '__all__'

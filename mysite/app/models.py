@@ -76,12 +76,14 @@ class TagModel(models.Model):
     descricao = models.CharField(max_length=150, unique=True)
 
 class ExtratoModel(models.Model):
-    # id_lancamento         = models.AutoField(primary_key=True)
     id_projeto            = models.ForeignKey(ProjetoModel, on_delete=models.CASCADE, related_name='id_projeto', db_column='id_projeto')
     id_movimentacao       = models.ForeignKey(TipoMovimentacaoModel, on_delete=models.CASCADE, related_name='id_movimentacao', db_column='id_movimentacao')
     data                  = models.DateField()
     id_rubrica            = models.ForeignKey(RubricaModel, on_delete=models.CASCADE, related_name='id_rubrica', db_column='id_rubrica')
     id_favorecido         = models.ForeignKey(FavorecidosModel, on_delete=models.CASCADE, related_name = 'id_favorecido', db_column='id_favorecido')
     valor                 = models.FloatField()
-    id_tag                = models.ForeignKey(TagModel, on_delete=models.CASCADE, related_name = 'id_tag', db_column='id_tag')
+    #id_tag                = models.ForeignKey(TagModel, on_delete=models.CASCADE, related_name = 'id_tag', db_column='id_tag')
     observacao            = models.CharField(max_length=150, blank=True)
+
+class TagModelExtrato(models.Model):
+    id_tag = models.ForeignKey(ExtratoModel, on_delete=models.CASCADE, related_name = 'id_extrato', db_column='id_extrato')

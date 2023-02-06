@@ -2,7 +2,7 @@ from django.shortcuts             import render
 from rest_framework.viewsets      import ModelViewSet
 from rest_framework.viewsets      import ViewSet
 from rest_framework.views         import APIView
-from .models                      import ProjetoModel, FavorecidosModel, CustomUser, TagModel, RubricaModel, TipoMovimentacaoModel, ExtratoModel
+from .models                      import ProjetoModel, FavorecidosModel, CustomUser, TagModel, RubricaModel, TipoMovimentacaoModel, ExtratoModel, TagModelExtrato
 from .serializers.serializer      import ProjetoSerializer, FavorecidoSerializer, UserSerializer, TagSerializer, RubricaSerializer, TipoMovimentacaoSerializer, ExtratoSerializer
                                          
 from rest_framework.response      import Response
@@ -212,6 +212,17 @@ class TipoMovimentacaoView(ViewSet):
         serializer = TipoMovimentacaoSerializer(queryset, many=True)
         return Response(serializer.data, status=200)
 
+# class TagExtratoView(ViewSet):
+#     @action(methods=['GET'], detail=false, url_path='obter_extratos')
+#     def obter_extratos(self, request, pk=None):
+#         try:
+#             queryset = ExtratoModel.objects.filter(id_projeto=pk)
+#         except ExtratoModel.DoesNotExist:
+#             return Response(status=200)
+        
+#         serializer = ExtratoSerializer(queryset, many=True)
+#         return Response(serializer.data, status=200)  
+
 class ExtratoView(ViewSet):
     permission_classes = [IsAuthenticated]
 
@@ -228,13 +239,16 @@ class ExtratoView(ViewSet):
     def obter_extratos(self, request, pk=None):
         try:
             queryset = ExtratoModel.objects.filter(id_projeto=pk)
+
+            for e in queryset:
+                print(e)
+
         except ExtratoModel.DoesNotExist:
             return Response(status=200)
         
         serializer = ExtratoSerializer(queryset, many=True)
         return Response(serializer.data, status=200)
 
-    
     @action(methods=['PUT'], detail=True, url_path='update_extrato')
     def update_extrato(self, request, pk=None):
         try:
