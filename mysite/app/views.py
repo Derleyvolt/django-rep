@@ -224,7 +224,7 @@ class TipoMovimentacaoView(ViewSet):
 #         return Response(serializer.data, status=200)  
 
 class ExtratoView(ViewSet):
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
     @action(methods=['POST'], detail=False, url_path='criar_extrato')
     def criar(self, request):
