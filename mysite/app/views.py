@@ -1,8 +1,9 @@
+from collections import OrderedDict
 from django.shortcuts             import render
 from rest_framework.viewsets      import ModelViewSet
 from rest_framework.viewsets      import ViewSet
 from rest_framework.views         import APIView
-from .models                      import ProjetoModel, FavorecidosModel, CustomUser, TagModel, RubricaModel, TipoMovimentacaoModel, ExtratoModel, TagModelExtrato
+from .models                      import ProjetoModel, FavorecidosModel, CustomUser, TagModel, RubricaModel, TipoMovimentacaoModel, ExtratoModel
 from .serializers.serializer      import ProjetoSerializer, FavorecidoSerializer, UserSerializer, TagSerializer, RubricaSerializer, TipoMovimentacaoSerializer, ExtratoSerializer
                                          
 from rest_framework.response      import Response
@@ -36,7 +37,7 @@ class UserAccountView(ViewSet):
         return Response("Failure", status=400)
 
 class ProjetoView(ViewSet):
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
     @action(methods=['POST'], detail=False, url_path='criar_projeto')
     def criar(self, request):
@@ -95,7 +96,8 @@ class ProjetoView(ViewSet):
         return Response(result, status=200)
 
 class FavorecidoView(ViewSet):
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
+
     @action(methods=['POST'], detail=False, url_path='criar_favorecido')
     def criar_favorecido(self, request):
         serializer = FavorecidoSerializer(data=request.data)
@@ -120,24 +122,8 @@ class FavorecidoView(ViewSet):
         serializer = FavorecidoSerializer(instance)
         return Response(serializer.data, status=200)
 
-def increment_rubrica_id(id, levels = 2):
-    if id.replace('.', '') == '333':
-        return id;
-
-    # 1.1.1 => permite 3^3-3^2 combinações
-    id_ls = list(id.replace('.', ''))
-
-    for i in range(2, 0, -1):
-        if (ord(id_ls[i])-ord('0')) < levels:
-            id_ls[i] = chr(ord(id_ls[i]) + 1)
-            break
-        else:
-            id_ls[i] = '0'
-    
-    return ".".join(id_ls)
-
 class RubricaView(ViewSet):
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
     @action(methods=['POST'], detail=False, url_path='criar_rubrica')
     def criar(self, request):
@@ -166,7 +152,7 @@ class RubricaView(ViewSet):
         return Response(serializer.data, status=200)
 
 class TagView(ViewSet):
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     @action(methods=['POST'], detail=False, url_path='criar_tag')
     def criar(self, request):
@@ -228,6 +214,10 @@ class ExtratoView(ViewSet):
 
     @action(methods=['POST'], detail=False, url_path='criar_extrato')
     def criar(self, request):
+        tags = request.data['tags']
+
+        del request.data['tag']
+
         serializer = ExtratoSerializer(data=request.data)
         
         if serializer.is_valid():
@@ -238,16 +228,27 @@ class ExtratoView(ViewSet):
     @action(methods=['GET'], detail=True, url_path='obter_extratos')
     def obter_extratos(self, request, pk=None):
         try:
-            queryset = ExtratoModel.objects.filter(id_projeto=pk)
+            queryset          = ExtratoModel.objects.filter(id_projeto=pk)
+            serializedExtrato = ExtratoSerializer(queryset, many=True)
 
-            for e in queryset:
-                print(e)
+            for ex in serializedExtrato.data:
+                idExtrato = ex.get('id')
+                try:
+                    tagQuerySet   = TagModel.objects.filter(id_extrato=idExtrato)
+                    serializedTag = TagSerializer(tagQuerySet, many=True)
+
+                    # coluna id_extrato não é útil aqui, é redundante
+                    for ex2 in serializedTag.data:
+                        ex2.pop('id_extrato')
+
+                    ex['tags']    = serializedTag.data
+                except:
+                    pass
 
         except ExtratoModel.DoesNotExist:
             return Response(status=200)
         
-        serializer = ExtratoSerializer(queryset, many=True)
-        return Response(serializer.data, status=200)
+        return Response(serializedExtrato.data, status=200)
 
     @action(methods=['PUT'], detail=True, url_path='update_extrato')
     def update_extrato(self, request, pk=None):
@@ -258,7 +259,6 @@ class ExtratoView(ViewSet):
             # ForeignKeys
             obj.id_favorecido_id            = request.data['id_favorecido']
             obj.id_rubrica_id               = request.data['id_rubrica']
-            obj.id_tag_id                   = request.data['id_tag']
             obj.id_movimentacao_id          = request.data['id_movimentacao']
             obj.id_projeto_id               = request.data['id_projeto']
 
