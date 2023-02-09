@@ -3,8 +3,8 @@ from django.shortcuts             import render
 from rest_framework.viewsets      import ModelViewSet
 from rest_framework.viewsets      import ViewSet
 from rest_framework.views         import APIView
-from .models                      import ProjetoModel, FavorecidosModel, CustomUser, TagModel, RubricaModel, TipoMovimentacaoModel, ExtratoModel
-from .serializers.serializer      import ProjetoSerializer, FavorecidoSerializer, UserSerializer, TagSerializer, RubricaSerializer, TipoMovimentacaoSerializer, ExtratoSerializer
+from .models                      import ProjetoModel, FavorecidosModel, CustomUser, TagModel, RubricaModel, TipoMovimentacaoModel, ExtratoModel, TagExtratoModel
+from .serializers.serializer      import ProjetoSerializer, FavorecidoSerializer, UserSerializer, TagSerializer, RubricaSerializer, TipoMovimentacaoSerializer, ExtratoSerializer, TagExtratoSerializer
                                          
 from rest_framework.response      import Response
 from rest_framework.decorators    import action
@@ -170,7 +170,7 @@ class TagView(ViewSet):
         return Response(serializer.data, status=200)
 
 class TipoMovimentacaoView(ViewSet):
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
     @action(methods=['POST'], detail=False, url_path='criar_movimentacao')
     def criar(self, request):
@@ -214,16 +214,30 @@ class ExtratoView(ViewSet):
 
     @action(methods=['POST'], detail=False, url_path='criar_extrato')
     def criar(self, request):
-        tags = request.data['tags']
+        try:
+            tags = request.data['tags']
 
-        del request.data['tag']
+            serializer = ExtratoSerializer(data=request.data)
+            
+            print(tags)
 
-        serializer = ExtratoSerializer(data=request.data)
-        
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=201)
-        return Response(status=400)
+            if serializer.is_valid():
+                serializer.save()
+
+
+                # if len(tags) > 0:
+                #     serializerTagExtrato = TagExtratoSerializer(data=)
+
+                for e in tags:
+                    dataTagExtrato = { "id_extrato": serializer.data['id'], "id_tag": e }
+                    serializerTagExtrato  = TagExtratoSerializer(data=dataTagExtrato)
+                    if serializerTagExtrato.is_valid():
+                        serializerTagExtrato.save()
+                
+                return Response(serializer.data, status=201)
+            return Response(status=400)
+        except:
+            return Response(status=400)
 
     @action(methods=['GET'], detail=True, url_path='obter_extratos')
     def obter_extratos(self, request, pk=None):
@@ -234,14 +248,15 @@ class ExtratoView(ViewSet):
             for ex in serializedExtrato.data:
                 idExtrato = ex.get('id')
                 try:
-                    tagQuerySet   = TagModel.objects.filter(id_extrato=idExtrato)
-                    serializedTag = TagSerializer(tagQuerySet, many=True)
+                    tagQuerySet   = TagExtratoModel.objects.filter(id_extrato=idExtrato)
+                    serializedTagExtrato = TagExtratoSerializer(tagQuerySet, many=True)
 
-                    # coluna id_extrato não é útil aqui, é redundante
-                    for ex2 in serializedTag.data:
+                    # coluna id_extrato e id não é útil aqui, é redundante.
+                    for ex2 in serializedTagExtrato.data:
                         ex2.pop('id_extrato')
+                        ex2.pop('id')
 
-                    ex['tags']    = serializedTag.data
+                    ex['tags'] = list(map(lambda e: e['id_tag'],serializedTagExtrato.data))
                 except:
                     pass
 
@@ -262,7 +277,25 @@ class ExtratoView(ViewSet):
             obj.id_movimentacao_id          = request.data['id_movimentacao']
             obj.id_projeto_id               = request.data['id_projeto']
 
+            queryset = TagExtratoModel.objects.filter(id_extrato=pk)
+            
+            tags = request.data['tags']
+
+            # só atualizo as tags necessárias
+            for data in queryset:
+                if data.id_tag.descricao not in tags:
+                    data.delete()
+                else:
+                    tags.remove(data.id_tag.descricao)
+            
+            for e in tags:
+                dataTagExtrato        = { "id_extrato": pk, "id_tag": e }
+                serializerTagExtrato  = TagExtratoSerializer(data=dataTagExtrato)
+                if serializerTagExtrato.is_valid():
+                    serializerTagExtrato.save()
+
             obj.save()
+            
         except ExtratoModel.DoesNotExist:
             return Response(status=200)
 

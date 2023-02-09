@@ -72,7 +72,7 @@ class RubricaModel(models.Model):
 class TipoMovimentacaoModel(models.Model):
     descricao = models.CharField(primary_key=True, max_length=150, unique=True)
 
-
+# RELAÇÃO 1:N COM TagModel  
 class ExtratoModel(models.Model):
     id_projeto            = models.ForeignKey(ProjetoModel, on_delete=models.CASCADE, related_name='id_projeto', db_column='id_projeto')
     id_movimentacao       = models.ForeignKey(TipoMovimentacaoModel, on_delete=models.CASCADE, related_name='id_movimentacao', db_column='id_movimentacao')
@@ -84,5 +84,8 @@ class ExtratoModel(models.Model):
     observacao            = models.CharField(max_length=150, blank=True)
 
 class TagModel(models.Model):
-    descricao   = models.CharField(max_length=150, unique=True)
-    id_extrato  = models.ForeignKey(ExtratoModel, on_delete=models.CASCADE, related_name = 'id_extrato', db_column='id_extrato', blank=True, null=True)
+    descricao   = models.CharField(max_length=150, unique=True, primary_key=True)
+
+class TagExtratoModel(models.Model):
+    id_extrato  = models.ForeignKey(ExtratoModel, on_delete=models.CASCADE, related_name = 'id_extrato', db_column='id_extrato')
+    id_tag      = models.ForeignKey(TagModel, on_delete=models.CASCADE, related_name = 'id_tag', db_column='id_tag', blank=True, null=True)
