@@ -85,8 +85,8 @@ class ExtratoModel(models.Model):
     valor                 = models.FloatField()
     #id_tag                = models.ForeignKey(TagModel, on_delete=models.CASCADE, related_name = 'id_tag', db_column='id_tag')
     observacao            = models.CharField(max_length=150, blank=True)
-    # data_documento        = models.DateField()
-    # data_pagamento        = models.DateField()
+    data_documento        = models.DateField()
+    data_pagamento        = models.DateField()
     #
 
 class TagModel(models.Model):
