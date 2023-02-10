@@ -198,17 +198,6 @@ class TipoMovimentacaoView(ViewSet):
         serializer = TipoMovimentacaoSerializer(queryset, many=True)
         return Response(serializer.data, status=200)
 
-# class TagExtratoView(ViewSet):
-#     @action(methods=['GET'], detail=false, url_path='obter_extratos')
-#     def obter_extratos(self, request, pk=None):
-#         try:
-#             queryset = ExtratoModel.objects.filter(id_projeto=pk)
-#         except ExtratoModel.DoesNotExist:
-#             return Response(status=200)
-        
-#         serializer = ExtratoSerializer(queryset, many=True)
-#         return Response(serializer.data, status=200)  
-
 class ExtratoView(ViewSet):
     #permission_classes = [IsAuthenticated]
 

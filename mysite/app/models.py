@@ -61,9 +61,12 @@ class ProjetoModel(models.Model):
     titulo            = models.CharField(max_length=150)
     contrato          = models.CharField(max_length=150)
     num_sap           = models.IntegerField()
-    id_coordenador    = models.ForeignKey(FavorecidosModel, on_delete=models.CASCADE, related_name = 'id_coordenador', db_column='id_coordenador')
-    id_proponente     = models.ForeignKey(FavorecidosModel, on_delete=models.CASCADE, related_name = 'id_proponente',  db_column='id_proponente')
-    id_usuario        = models.ForeignKey(CustomUser,       on_delete=models.CASCADE, related_name = 'id_usuario',     db_column='id_user')
+    id_coordenador    = models.ForeignKey(FavorecidosModel, on_delete=models.CASCADE, related_name='id_coordenador', db_column='id_coordenador')
+    id_proponente     = models.ForeignKey(FavorecidosModel, on_delete=models.CASCADE, related_name='id_proponente',  db_column='id_proponente')
+    id_usuario        = models.ForeignKey(CustomUser,       on_delete=models.CASCADE, related_name='id_usuario',     db_column='id_user')
+    data_inicial      = models.DateField()
+    data_final        = models.DateField()
+
 
 class RubricaModel(models.Model):
     id         = models.CharField(primary_key=True, max_length=100, unique=True)
@@ -72,7 +75,7 @@ class RubricaModel(models.Model):
 class TipoMovimentacaoModel(models.Model):
     descricao = models.CharField(primary_key=True, max_length=150, unique=True)
 
-# RELAÇÃO 1:N COM TagModel  
+# RELAÇÃO 1:N COM TagModel  [EDITADO]
 class ExtratoModel(models.Model):
     id_projeto            = models.ForeignKey(ProjetoModel, on_delete=models.CASCADE, related_name='id_projeto', db_column='id_projeto')
     id_movimentacao       = models.ForeignKey(TipoMovimentacaoModel, on_delete=models.CASCADE, related_name='id_movimentacao', db_column='id_movimentacao')
@@ -82,6 +85,9 @@ class ExtratoModel(models.Model):
     valor                 = models.FloatField()
     #id_tag                = models.ForeignKey(TagModel, on_delete=models.CASCADE, related_name = 'id_tag', db_column='id_tag')
     observacao            = models.CharField(max_length=150, blank=True)
+    # data_documento        = models.DateField()
+    # data_pagamento        = models.DateField()
+    #
 
 class TagModel(models.Model):
     descricao   = models.CharField(max_length=150, unique=True, primary_key=True)
