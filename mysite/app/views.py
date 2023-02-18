@@ -213,10 +213,6 @@ class ExtratoView(ViewSet):
             if serializer.is_valid():
                 serializer.save()
 
-
-                # if len(tags) > 0:
-                #     serializerTagExtrato = TagExtratoSerializer(data=)
-
                 for e in tags:
                     dataTagExtrato = { "id_extrato": serializer.data['id'], "id_tag": e }
                     serializerTagExtrato  = TagExtratoSerializer(data=dataTagExtrato)
