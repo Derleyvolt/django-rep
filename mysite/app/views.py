@@ -3,38 +3,81 @@ from django.shortcuts             import render
 from rest_framework.viewsets      import ModelViewSet
 from rest_framework.viewsets      import ViewSet
 from rest_framework.views         import APIView
-from .models                      import ProjetoModel, FavorecidosModel, CustomUser, TagModel, RubricaModel, TipoMovimentacaoModel, ExtratoModel, TagExtratoModel
-from .serializers.serializer      import ProjetoSerializer, FavorecidoSerializer, UserSerializer, TagSerializer, RubricaSerializer, TipoMovimentacaoSerializer, ExtratoSerializer, TagExtratoSerializer
+from .models                      import ProjetoModel, FavorecidosModel, CustomUser, TagModel, RubricaModel, TipoMovimentacaoModel, ExtratoModel, TagExtratoModel, UserEmailValidator
+from .serializers.serializer      import ProjetoSerializer, FavorecidoSerializer, UserSerializer, TagSerializer, RubricaSerializer, TipoMovimentacaoSerializer, ExtratoSerializer, TagExtratoSerializer, UserEmailValidatorSerializer
                                          
 from rest_framework.response      import Response
 from rest_framework.decorators    import action
 from rest_framework.permissions   import IsAuthenticated
 from django.contrib.auth.hashers  import check_password
+from django.core.mail             import send_mail
+import random
 
 # Create your views here.
 
-class UserAccountView(ViewSet):
-    def cadastrar(self, request):
-        user = UserSerializer(data=request.data)
+def genRandomCode():
+    code = ''
+    for i in range(10):
+        code += str(random.randint(0, 9))
+    return code
 
-        if user.is_valid():
-            CustomUser.objects.create_user(request.data['username'], request.data['password'])
-            return Response(user.data, status=200)
+class UserAccountView(ViewSet):
+    def validar_email(self, request):
+        try:
+            userFilter = CustomUser.objects.filter(email=request.data['email'])
+
+            if userFilter:
+                return Response('Email já cadastrado', status=400)
+
+            while True:
+                code = genRandomCode()
+                if not UserEmailValidator.objects.filter(id=code):
+                    break
+
+            send_mail(
+                'Codigo de confirmação',
+                'Seu código de confirmação é ' + code,
+                'missvegastop@gmail.com',
+                [request.data['email']],
+                fail_silently=False,
+            )
         
-        return Response(status=410)
+            obj = UserEmailValidator.objects.create(id=code, email=request.data['email'])
+            obj.save()
+
+            return Response(status=200)
+        except:
+            return Response('Algum erro ocorreu', status=400)
+
+    def cadastrar(self, request):
+        try:
+            user = UserSerializer(data=request.data)
+            code = request.data['codigo']
+
+            if not UserEmailValidator.objects.filter(id=code):
+                return Response('Código inválido', status=400)
+
+            if user.is_valid():
+                UserEmailValidator.objects.filter(email=request.data['email']).delete()
+                CustomUser.objects.create_user(request.data['email'], request.data['password'], request.data['username'])
+                return Response(user.data, status=200)
+            return Response(status=400)
+
+        except:
+            return Response(status=410)
 
     def obter_id(self, request):
-        username = request.data['username']
+        email    = request.data['email']
         password = request.data['password']
 
         try:
-            query = CustomUser.objects.get(username = username)
+            query = CustomUser.objects.get(email = email)
         except:
-            return Response("Failure", status=400)
+            return Response("Algum erro ocorreu", status=400)
 
         if check_password(password, query.password):
             return Response({'id' : query.id}, status=200)
-        return Response("Failure", status=400)
+        return Response("Algum erro ocorreu", status=400)
 
 class ProjetoView(ViewSet):
     #permission_classes = [IsAuthenticated]

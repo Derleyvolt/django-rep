@@ -5,22 +5,27 @@ from django.utils.translation   import gettext as _
 from .managerUser import UserManager
 # Create your models here.
 
+class UserEmailValidator(models.Model):
+    id    = models.CharField(primary_key=True, unique=True, max_length=150)
+    email = models.CharField(max_length=150)
+
 class CustomUser(AbstractBaseUser):
-    username = models.CharField(
-        verbose_name='username',
+    email = models.EmailField(
+        verbose_name='email',
         max_length=255,
         unique=True,
     )
 
-    is_active = models.BooleanField(default=True)   
-    staff     = models.BooleanField(default=False) # a admin user; non super-user
-    admin     = models.BooleanField(default=False) # a superuser
+    is_active  = models.BooleanField(default=True)   
+    staff      = models.BooleanField(default=False) # a admin user; non super-user
+    admin      = models.BooleanField(default=False) # a superuser
+    username   = models.CharField(max_length=150)
 
     objects = UserManager()
 
     # notice the absence of a "Password field", that is built in.
 
-    USERNAME_FIELD = 'username'
+    USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = [] # Username & Password are required by default.
 
     def get_full_name(self):

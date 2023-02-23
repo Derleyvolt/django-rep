@@ -17,6 +17,7 @@ urlpatterns = [
     path('cadastrar/',      include(router.urls)),
 
     path('cadastrar_usuario/',      UserAccountView.as_view({'post' : 'cadastrar'})),
+    path('validar_email/',      UserAccountView.as_view({'post' : 'validar_email'})),
     path('obter_id_usuario/',       UserAccountView.as_view({'get'  : 'obter_id'})),
     path('token/',          jwt_views.TokenObtainPairView.as_view(),  name ='token_obtain_pair'),
     path('token/refresh/',  jwt_views.TokenRefreshView.as_view(),     name ='token_refresh'),
