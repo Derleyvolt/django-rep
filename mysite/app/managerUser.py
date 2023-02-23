@@ -3,7 +3,7 @@ from django.utils.translation   import gettext as _
 from django.contrib.auth.hashers      import make_password
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, password, username):
+    def create_user(self, email, password, username=None):
         """
         Creates and saves a User with the given email and password.
         """
@@ -21,27 +21,27 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    # def create_staffuser(self, email, password, username):
-    #     """
-    #     Creates and saves a staff user with the given email and password.
-    #     """
-    #     user = self.create_user(
-    #         email,
-    #         password=password,
-    #     )
-    #     user.staff = True
-    #     user.save(using=self._db)
-    #     return user
+    def create_staffuser(self, email, password):
+        """
+        Creates and saves a staff user with the given email and password.
+        """
+        user = self.create_user(
+            email,
+            password=password,
+        )
+        user.staff = True
+        user.save(using=self._db)
+        return user
 
-    # def create_superuser(self, email, password, username):
-    #     """
-    #     Creates and saves a superuser with the given email and password.
-    #     """
-    #     user = self.create_user(
-    #         email,
-    #         password=password,
-    #     )
-    #     user.staff = True
-    #     user.admin = True
-    #     user.save(using=self._db)
-    #     return user
+    def create_superuser(self, email, password):
+        """
+        Creates and saves a superuser with the given email and password.
+        """
+        user = self.create_user(
+            email,
+            password=password,
+        )
+        user.staff = True
+        user.admin = True
+        user.save(using=self._db)
+        return user

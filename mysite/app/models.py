@@ -19,7 +19,7 @@ class CustomUser(AbstractBaseUser):
     is_active  = models.BooleanField(default=True)   
     staff      = models.BooleanField(default=False) # a admin user; non super-user
     admin      = models.BooleanField(default=False) # a superuser
-    username   = models.CharField(max_length=150)
+    username   = models.CharField(max_length=150, blank=True, null=True)
 
     objects = UserManager()
 

@@ -19,7 +19,7 @@ class FavorecidoSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model   = CustomUser
-        fields  = ['email', 'password', 'username']
+        fields  = ['email', 'password']
 
 class TipoMovimentacaoSerializer(serializers.ModelSerializer):
     class Meta:
