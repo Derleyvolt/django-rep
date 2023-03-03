@@ -20,7 +20,7 @@ class CustomUser(AbstractBaseUser):
     staff      = models.BooleanField(default=False) # a admin user; non super-user
     admin      = models.BooleanField(default=False) # a superuser
     username   = models.CharField(max_length=150, blank=True, null=True)
-    documento  = models.CharField(max_length=150, unique=True)
+    documento  = models.CharField(max_length=150, blank=True, null=True)
 
     objects = UserManager()
 
