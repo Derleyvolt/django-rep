@@ -20,14 +20,14 @@ class CustomUser(AbstractBaseUser):
     staff      = models.BooleanField(default=False) # a admin user; non super-user
     admin      = models.BooleanField(default=False) # a superuser
     username   = models.CharField(max_length=150, blank=True, null=True)
-    documento  = models.CharField(max_length=150, unique=True)
+    documento  = models.CharField(max_length=150, blank=True, null=True)
 
     objects = UserManager()
 
     # notice the absence of a "Password field", that is built in.
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['documento'] # Username & Password are required by default.
+    REQUIRED_FIELDS = [] # Username & Password are required by default.
 
     def get_full_name(self):
         return self.username

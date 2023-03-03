@@ -3,7 +3,7 @@ from django.utils.translation   import gettext as _
 from django.contrib.auth.hashers      import make_password
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, password, documento, username=None):
+    def create_user(self, email, password, documento=None, username=None):
         """
         Creates and saves a User with the given email and password.
         """
@@ -34,18 +34,16 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, password, documento):
+    def create_superuser(self, email, password):
         """
         Creates and saves a superuser with the given email and password.
         """
         user = self.create_user(
             email,
             password=password,
-            documento=documento
         )
 
         user.staff = True
         user.admin = True
-        user.documento = documento
         user.save(using=self._db)
         return user
