@@ -59,7 +59,7 @@ class UserAccountView(ViewSet):
 
             if user.is_valid():
                 UserEmailValidator.objects.filter(email=request.data['email']).delete()
-                CustomUser.objects.create_user(request.data['email'], request.data['password'], request.data['username'])
+                CustomUser.objects.create_user(request.data['email'], request.data['password'], request.data['documento'], request.data['username'])
                 return Response(user.data, status=200)
             return Response(status=400)
 
