@@ -3,8 +3,8 @@ from django.shortcuts             import render
 from rest_framework.viewsets      import ModelViewSet
 from rest_framework.viewsets      import ViewSet
 from rest_framework.views         import APIView
-from .models                      import ProjetoModel, FavorecidosModel, CustomUser, TagModel, RubricaModel, TipoMovimentacaoModel, ExtratoModel, TagExtratoModel, UserEmailValidator
-from .serializers.serializer      import ProjetoSerializer, FavorecidoSerializer, UserSerializer, TagSerializer, RubricaSerializer, TipoMovimentacaoSerializer, ExtratoSerializer, TagExtratoSerializer, UserEmailValidatorSerializer
+from .models                      import ProjetoModel, FavorecidosModel, CustomUser, TagModel, RubricaModel, TipoMovimentacaoModel, ExtratoModel, TagExtratoModel, UserEmailValidator, ExecutorModel
+from .serializers.serializer      import ProjetoSerializer, FavorecidoSerializer, UserSerializer, TagSerializer, RubricaSerializer, TipoMovimentacaoSerializer, ExtratoSerializer, TagExtratoSerializer, UserEmailValidatorSerializer, ExecutorSerializer
                                          
 from rest_framework.response      import Response
 from rest_framework.decorators    import action
@@ -217,7 +217,6 @@ class TipoMovimentacaoView(ViewSet):
 
     @action(methods=['POST'], detail=False, url_path='criar_movimentacao')
     def criar(self, request):
-        print(request.data)
         serializer = TipoMovimentacaoSerializer(data=request.data)
 
         if serializer.is_valid():
@@ -241,6 +240,30 @@ class TipoMovimentacaoView(ViewSet):
         serializer = TipoMovimentacaoSerializer(queryset, many=True)
         return Response(serializer.data, status=200)
 
+
+class ExecutorView(ViewSet):
+    @action(methods=['POST'], detail=False, url_path='cadastrar_executor')
+    def criar_executor(self, request):
+        try:
+            print(request.data)
+            serializer = ExecutorSerializer(data=request.data)
+
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=201)
+        except:
+            return Response(status=400)
+        
+    @action(methods=['GET'], detail=False, url_path='listar_executor') 
+    def listar_executor(self, request):
+        try:
+            queryset   = ExecutorModel.objects.all()
+            serializer = ExecutorSerializer(queryset, many=True)
+            return Response(serializer.data, status=200)
+        except:
+            return Response("Error", status=400)
+
+
 class ExtratoView(ViewSet):
     #permission_classes = [IsAuthenticated]
 
@@ -251,8 +274,6 @@ class ExtratoView(ViewSet):
 
             serializer = ExtratoSerializer(data=request.data)
             
-            print(tags)
-
             if serializer.is_valid():
                 serializer.save()
 

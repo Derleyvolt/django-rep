@@ -63,6 +63,9 @@ class FavorecidosModel(models.Model):
     cpf    = models.CharField(max_length=150, blank=True, null=True, unique=True)
     cnpj   = models.CharField(max_length=150, blank=True, null=True)
 
+class ExecutorModel(models.Model):
+    executor = models.CharField(max_length=150, unique=True, primary_key=True)
+
 class ProjetoModel(models.Model):
     titulo            = models.CharField(max_length=150)
     contrato          = models.CharField(max_length=150)
@@ -70,9 +73,9 @@ class ProjetoModel(models.Model):
     id_coordenador    = models.ForeignKey(FavorecidosModel, on_delete=models.CASCADE, related_name='id_coordenador', db_column='id_coordenador')
     id_proponente     = models.ForeignKey(FavorecidosModel, on_delete=models.CASCADE, related_name='id_proponente',  db_column='id_proponente')
     id_usuario        = models.ForeignKey(CustomUser,       on_delete=models.CASCADE, related_name='id_usuario',     db_column='id_user')
+    executor          = models.ForeignKey(ExecutorModel,    on_delete=models.CASCADE, related_name='id_executor',     db_column='id_executor')
     data_inicial      = models.DateField()
     data_final        = models.DateField()
-
 
 class RubricaModel(models.Model):
     id         = models.CharField(primary_key=True, max_length=100, unique=True)
@@ -93,7 +96,6 @@ class ExtratoModel(models.Model):
     observacao            = models.CharField(max_length=150, blank=True)
     data_documento        = models.DateField()
     data_pagamento        = models.DateField()
-    #
 
 class TagModel(models.Model):
     descricao   = models.CharField(max_length=150, unique=True, primary_key=True)

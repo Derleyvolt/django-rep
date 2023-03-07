@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import SimpleRouter
-from .views import ProjetoView, UserAccountView, RubricaView, TagView, TipoMovimentacaoView, ExtratoView, FavorecidoView
+from .views import ProjetoView, UserAccountView, RubricaView, TagView, TipoMovimentacaoView, ExtratoView, FavorecidoView, ExecutorView
 from rest_framework_simplejwt import views as jwt_views
 
 router = SimpleRouter()
@@ -12,6 +12,7 @@ router.register('', TagView,                basename='tagview')
 router.register('', TipoMovimentacaoView,   basename='tipomovimentacaoview')
 router.register('', ExtratoView,            basename='extratoview')
 router.register('', FavorecidoView,         basename='favorecidoview')
+router.register('', ExecutorView,           basename='executorview')
 
 urlpatterns = [
     path('cadastrar/',      include(router.urls)),

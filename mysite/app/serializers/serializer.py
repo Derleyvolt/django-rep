@@ -1,9 +1,14 @@
 from rest_framework import serializers
-from ..models import ProjetoModel, FavorecidosModel, CustomUser, RubricaModel, TagModel, TipoMovimentacaoModel, ExtratoModel, TagExtratoModel, UserEmailValidator
+from ..models import ProjetoModel, FavorecidosModel, CustomUser, RubricaModel, TagModel, TipoMovimentacaoModel, ExtratoModel, TagExtratoModel, UserEmailValidator, ExecutorModel
 
 class UserEmailValidatorSerializer(serializers.ModelSerializer):
     class Meta:
         model   = UserEmailValidator
+        fields  = '__all__'
+
+class ExecutorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model   = ExecutorModel
         fields  = '__all__'
 
 class ProjetoSerializer(serializers.ModelSerializer):
