@@ -84,6 +84,7 @@ class ProjetoView(ViewSet):
 
     @action(methods=['POST'], detail=False, url_path='criar_projeto')
     def criar(self, request):
+        print(request.data)
         serializer = ProjetoSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -240,12 +241,10 @@ class TipoMovimentacaoView(ViewSet):
         serializer = TipoMovimentacaoSerializer(queryset, many=True)
         return Response(serializer.data, status=200)
 
-
 class ExecutorView(ViewSet):
     @action(methods=['POST'], detail=False, url_path='cadastrar_executor')
     def criar_executor(self, request):
         try:
-            print(request.data)
             serializer = ExecutorSerializer(data=request.data)
 
             if serializer.is_valid():
@@ -262,7 +261,6 @@ class ExecutorView(ViewSet):
             return Response(serializer.data, status=200)
         except:
             return Response("Error", status=400)
-
 
 class ExtratoView(ViewSet):
     #permission_classes = [IsAuthenticated]

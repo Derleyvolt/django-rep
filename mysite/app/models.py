@@ -96,6 +96,9 @@ class ExtratoModel(models.Model):
     observacao            = models.CharField(max_length=150, blank=True)
     data_documento        = models.DateField()
     data_pagamento        = models.DateField()
+    quantidade            = models.IntegerField()
+    unidade               = models.CharField(max_length=150)
+    valor_total           = models.FloatField()
 
 class TagModel(models.Model):
     descricao   = models.CharField(max_length=150, unique=True, primary_key=True)
